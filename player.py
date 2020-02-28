@@ -40,9 +40,7 @@ class Player:
     @staticmethod
     def stop():
         Player.force_stop = not Player.force_stop
-        
-        if debug:
-            if Player.force_stop:
-                print("now the app is frozen")
-            else:
-                print("free to play")
+        if Player.force_stop:
+            print("not running")
+        else:
+            print("running")
