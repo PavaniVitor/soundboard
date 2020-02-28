@@ -7,9 +7,10 @@ class Player:
     """ class to wrap pyaudio audio playback """
     pyaudio_instance = pyaudio.PyAudio()
     CHUNK = 1024
+    force_stop = False
 
     @staticmethod
-    def play(wave_file_path, device=None):
+    def play(wave_file_path, device=None, DEBUG=False):
         """ 
         Play wave_file located in wave_file_path
         if no device is specified the audio will be played on default device.
@@ -30,6 +31,18 @@ class Player:
         while data:
             stream.write(data)
             data = wave_file.readframes(Player.CHUNK)
+            if Player.force_stop:
+                break
         
         stream.stop_stream()
         stream.close()
+
+    @staticmethod
+    def stop():
+        Player.force_stop = not Player.force_stop
+        
+        if debug:
+            if Player.force_stop:
+                print("now the app is frozen")
+            else:
+                print("free to play")

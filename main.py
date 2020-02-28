@@ -69,8 +69,19 @@ def on_press(key):
     if DEBUG:
         print('{} ({}) pressed'.format(key, k))
 
-    if k == "f10":
+    try:
+        close_key = config["DEFAULT"]["close key"]
+        stop_key = config["DEFAULT"]["stop key"]
+    except KeyError:
+        close_key = "f10"
+        stop_key = "g"
+    
+    if k == close_key:
         return False
+
+    if k == stop_key:
+        Player.stop()
+        return True
 
     try:
         file_path = sound_folder / config["BINDS"][k]
