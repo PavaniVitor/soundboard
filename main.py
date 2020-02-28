@@ -1,11 +1,12 @@
 import configparser
+import sys
 from player import Player
 from pathlib import Path
 from pynput.keyboard import Key
 from pynput.keyboard import Listener
 from threading import Thread
 
-DEBUG = False
+DEBUG = True
 
 keys = {
     "Key.f1" : "f1",
@@ -52,49 +53,43 @@ def get_vb_index(pyaudio_player):
 config = configparser.ConfigParser()
 config.read("config.cfg")
 
-player = Player()
+sound_folder = Path(config["DEFAULT"]["sound folder"])
 
 if not config["DEFAULT"]["cable index"]:
-    vb_ind = get_vb_index(player.pyaudio_instance)
+    vb_index = get_vb_index(Player.pyaudio_instance)
 else:
-    vb_ind = config.getint("DEFAULT", "cable index")
-
-sound_folder = Path(config["DEFAULT"]["sound folder"])
-f = sound_folder / "chirp.wav"
-
-
-def play(f):
-    player.play(str(f))
-    player.play(str(f),device=vb_ind)
+    vb_index = config.getint("DEFAULT", "cable index")
 
 
 def on_press(key):
-    if DEBUG:
-        print('{0} pressed'.format(key))
-    
-    try:
-        k = keys['{0}'.format(key)]
-    except:
-        k = '{0}'.format(key)
-    
-    if DEBUG:
-        print(k)
+    key = str(key)
+    k = keys.get(key, key)
+    k = k.replace("'", "")
 
-    # acha o audio pra tocar
-
-    if key == Key.f1: # menos feio porem correto
-        Thread(target=play, args=(f, )).start()
-        
-def on_release(key):
     if DEBUG:
-        print('{0} release'.format(key))
+        print('{} ({}) pressed'.format(key, k))
 
-    if key == Key.f10:
-        # Stop listener
+    if k == "f10":
         return False
 
+    try:
+        file_path = sound_folder / config["BINDS"][k]
+    except KeyError:
+        sys.stderr.write("bind {} not found".format(k))
+        return True
 
-with Listener(
-    on_press=on_press,
-    on_release=on_release) as listener:
+    if file_path:
+        Thread(target=play, args=(file_path, )).start()             # play for me
+        Thread(target=play, args=(file_path, vb_index)).start()       # play in vb output
+    elif DEBUG:
+        print("file_path {} not found".format(file_path))
+
+
+def play(file_path, device=None):
+    Player.play(str(file_path), device)
+
+def main():
+    with Listener(on_press=on_press) as listener:
         listener.join()
+
+if __name__ == '__main__': main()
