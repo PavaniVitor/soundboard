@@ -16,10 +16,17 @@ class Player:
     def __exit__(self, type, value, traceback):
         self.p.terminate()
 
-    def play(self, wf, device):
-        """ play wf file in device """
-        wf = wave.open(wf)
+    def play(self, wf, device=None):
+        """ 
+        Play wf file in device
+        if no device is specified the audio will be played on default device.
+        """
+        
+        if device is None:
+            device = self.p.get_default_output_device_info().get("index")
 
+        wf = wave.open(wf)
+        
         stream = self.p.open(format=self.p.get_format_from_width(wf.getsampwidth()),
                         channels=wf.getnchannels(),
                         rate=wf.getframerate(),
