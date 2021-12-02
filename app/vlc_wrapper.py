@@ -33,6 +33,8 @@ def play(src, vol=100):
     player.audio_output_device_set(None, device) 
     player.audio_set_volume(vol)
     time.sleep(.2)
-    while player.is_playing(): pass
+    # while player.is_playing(): pass 
+    return player
+
 if __name__ == "__main__":
-    play("bruhj.mp3", 50)
+    play("sounds/bruh.mp3", vol=100)

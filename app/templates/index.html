@@ -6,6 +6,12 @@
 <h1>PC Remote</h1>
 <!-- <div id="shutdown" class="btn" style="margin-bottom:2rem">Shutdown</div> -->
 
+<div id=stop class="btn">stop</div>
+<script>
+const script_ = document.getElementById("stop");
+script_.addEventListener('click', () => { fetch("/stop") })
+</script>
+
 {% for audio in audios: %}
 <div id={{audio}} class="btn">{{audio}}</div>
 
