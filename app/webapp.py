@@ -10,16 +10,21 @@ config = "config.txt"
 player_instances = []
 
 with open(config) as f:
-    lines = f.readlines()
-    for line in lines:
-        name, uri = line.split("=")
-        audios[name]=uri.strip()
-        print(f"{name=}{uri=}")
 
+    print("reading config.txt: ")
+    for line in f.readlines():
+        line = line.strip()
+        if line:
+            name, uri = line.split("=")
+            audios[name] = uri.strip()
+        print(f"{name=} {uri=}")
+    print()
+
+print("reading files from /sounds:")
 for sound_file in os.listdir('sounds'):
     audios[sound_file] = os.path.join(os.getcwd(), 'sounds', sound_file)
-    print(f'added file from soundfile folder: {sound_file}')
-
+    print(f'{sound_file}')
+print()
 
 @app.route("/")
 def home():
