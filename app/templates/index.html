@@ -1,0 +1,42 @@
+<head>
+    <title>PC Remote</title>
+    <meta name="theme-color" content="#1f3543" />
+</head>
+<body>
+<h1>PC Remote</h1>
+<!-- <div id="shutdown" class="btn" style="margin-bottom:2rem">Shutdown</div> -->
+
+{% for audio in audios: %}
+<div id={{audio}} class="btn">{{audio}}</div>
+
+<script>
+    const script_{{loop.index}} = document.getElementById("{{audio}}");
+script_{{loop.index}}.addEventListener('click', () => { fetch("/{{audio}}") })
+</script>
+
+{% endfor %}
+
+<style>
+.btn {
+    background: #132324;
+    padding: 3rem;
+    text-align: center;
+    color: white;
+    font-family: monospace;
+    font-size: xx-large;
+    margin:1rem;
+    cursor:pointer;
+}
+h1 {    
+    font-variant: all-small-caps;
+    text-align: center;
+    color: #c5c8cc;
+    font-family: monospace;
+    margin-bottom: 10px;
+    
+}
+body {
+    background-color: #1f3543;
+}
+</style>
+</body>

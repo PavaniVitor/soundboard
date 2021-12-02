@@ -1,0 +1,2 @@
+bruh=bruh.mp3
+cavalo=https://www.myinstants.com/media/sounds/cavalo.mp3

@@ -2,6 +2,7 @@ import pyaudio
 import wave
 import sys
 
+from vlc import play
 
 class Player:
     """ class to wrap pyaudio audio playback """
