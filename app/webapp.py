@@ -11,25 +11,28 @@ player_instances = []
 vol_self = 50
 vol_other = 100
 
-with open(config) as f:
 
-    print("reading config.txt: ")
-    for line in f.readlines():
-        line = line.strip()
-        if line:
-            name, uri = line.split("=")
-            audios[name] = uri.strip()
-        print(f"{name=} {uri=}")
+def load():
+    with open(config) as f:
+
+        print("reading config.txt: ")
+        for line in f.readlines():
+            line = line.strip()
+            if line:
+                name, uri = line.split("=")
+                audios[name] = uri.strip()
+            print(f"{name=} {uri=}")
+        print()
+
+    print("reading files from /sounds:")
+    for sound_file in os.listdir('sounds'):
+        audios[sound_file] = os.path.join(os.getcwd(), 'sounds', sound_file)
+        print(f'{sound_file}')
     print()
-
-print("reading files from /sounds:")
-for sound_file in os.listdir('sounds'):
-    audios[sound_file] = os.path.join(os.getcwd(), 'sounds', sound_file)
-    print(f'{sound_file}')
-print()
 
 @app.route("/")
 def home():
+    load()
     return render_template("index.html", audios=audios)
 
 @app.route("/<audio_name>")
