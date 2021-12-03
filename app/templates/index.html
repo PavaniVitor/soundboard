@@ -4,12 +4,26 @@
 </head>
 <body>
 <h1>PC Remote</h1>
-<!-- <div id="shutdown" class="btn" style="margin-bottom:2rem">Shutdown</div> -->
+
 
 <div id=stop class="btn">stop</div>
 <script>
 const script_ = document.getElementById("stop");
 script_.addEventListener('click', () => { fetch("/stop") })
+</script>
+
+<input id="slide" type="range" min="0" max="100" step="1" name="volume_slider" onchange="updateSliderSelf(this.value)"/>
+<script>
+    function updateSliderSelf(amount) {
+        fetch("/volume_self/".concat(amount.toString()))
+    }
+</script>
+
+<input id="slide" type="range" min="0" max="100" step="1" name="volume_slider" onchange="updateSliderOther(this.value)"/>
+<script>
+    function updateSliderOther(amount) {
+        fetch("/volume_other/".concat(amount.toString()))
+    }
 </script>
 
 {% for audio in audios: %}
@@ -19,7 +33,6 @@ script_.addEventListener('click', () => { fetch("/stop") })
     const script_{{loop.index}} = document.getElementById("{{audio}}");
 script_{{loop.index}}.addEventListener('click', () => { fetch("/{{audio}}") })
 </script>
-
 {% endfor %}
 
 <style>

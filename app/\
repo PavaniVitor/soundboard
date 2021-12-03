@@ -8,8 +8,7 @@ app = Flask(__name__)
 audios = {} 
 config = "config.txt"
 player_instances = []
-vol_self = 50
-vol_other = 100
+volume_self = 50
 
 with open(config) as f:
 
@@ -35,9 +34,9 @@ def home():
 @app.route("/<audio_name>")
 def play_audio(audio_name):
     print(f"playing: {audio_name}")
-    global player_instances, vol_self, vol_other
-    player_instances.append(play(audios[audio_name], volume=vol_other))
-    player_instances.append(play(audios[audio_name], volume=vol_self, vb_cable=False))
+    global player_instances, volume_self
+    player_instances.append(play(audios[audio_name], vol=100))
+    player_instances.append(play(audios[audio_name], vol=volume_self, vb_cable=False))
     return "boa!"
 
 @app.route("/stop")
@@ -49,21 +48,6 @@ def stop_audio():
     player_instances = []
     print("parando")
     return "paro"
-
-@app.route("/volume_self/<amount>")
-def volume_self(amount):
-    global vol_self
-    vol_self = int(amount)
-    print(f"volume_self set to {amount}")
-    return "volume!"
-
-@app.route("/volume_other/<amount>")
-def volume_other(amount):
-    global vol_other
-    vol_other = int(amount)
-    print(f"volume_other set to {amount}")
-    return "volume!"
-    
 
 app.run(host='0.0.0.0')
 

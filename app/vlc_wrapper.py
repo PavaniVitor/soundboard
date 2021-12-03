@@ -20,7 +20,7 @@ def get_vb_device_string():
     vlc.libvlc_audio_output_device_list_release(mods)
     return device
 
-def play(src, vol=100):
+def play(src, volume=100, vb_cable=True):
     instance = vlc.Instance()
     if src.startswith("https://") or os.path.exists(src):
         player = instance.media_player_new(src)
@@ -30,11 +30,12 @@ def play(src, vol=100):
     
     device = get_vb_device_string()
     player.play()
-    player.audio_output_device_set(None, device) 
-    player.audio_set_volume(vol)
+    if vb_cable:
+        player.audio_output_device_set(None, device) 
+    player.audio_set_volume(int(volume))
     time.sleep(.2)
     # while player.is_playing(): pass 
     return player
 
 if __name__ == "__main__":
-    play("sounds/bruh.mp3", vol=100)
+    play("sounds/bruh.mp3", volume=100)
